@@ -1,38 +1,41 @@
 package main
 
 import (
+	"database/sql"
 	"flag"
 	"log"
 	"net/http"
 	"os"
+
+	_ "github.com/lib/pq"
+	"github.com/test/pkg/models/postgre"
 )
 
 type application struct {
 	errorLog *log.Logger
 	infoLog  *log.Logger
-	// snippets *mysql.SnippetModel
+	commands *postgre.CommandModel
 }
 
 func main() {
 	addr := flag.String("addr", ":8080", "Сетевой адрес веб-сервера")
-	// dsn := flag.String("dsn", "web:ilya2003#@/snippetbox?parseTime=true", "Название PostgreSQL источника данных")
+	dsn := flag.String("dsn", "host=localhost port=5432 user=postgres password=1 dbname=postgres sslmode=disable", "Название PostgreSQL источника данных")
 	flag.Parse()
 
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 
-	// db, err := openDB(*dsn)
-	// if err != nil {
-	// 	errorLog.Fatal(err)
-	// }
+	db, err := openDB(*dsn)
+	if err != nil {
+		errorLog.Fatal(err)
+	}
 
-	// defer db.Close()
+	defer db.Close()
 
-	// Инициализируем экземпляр mysql.SnippetModel и добавляем его в зависимостях.
 	app := &application{
 		errorLog: errorLog,
 		infoLog:  infoLog,
-		// snippets: &mysql.SnippetModel{DB: db},
+		commands: &postgre.CommandModel{DB: db},
 	}
 
 	srv := &http.Server{
@@ -42,17 +45,17 @@ func main() {
 	}
 
 	infoLog.Printf("Запуск сервера на %s", *addr)
-	err := srv.ListenAndServe()
+	err = srv.ListenAndServe()
 	errorLog.Fatal(err)
 }
 
-// func openDB(dsn string) (*sql.DB, error) {
-// 	db, err := sql.Open("postgres", dsn)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	if err = db.Ping(); err != nil {
-// 		return nil, err
-// 	}
-// 	return db, nil
-// }
+func openDB(dsn string) (*sql.DB, error) {
+	db, err := sql.Open("postgres", dsn)
+	if err != nil {
+		return nil, err
+	}
+	if err = db.Ping(); err != nil {
+		return nil, err
+	}
+	return db, nil
+}
