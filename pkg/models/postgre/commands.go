@@ -12,27 +12,22 @@ type CommandModel struct {
 }
 
 // Insert - Метод для создания новой заметки в базе дынных.
-func (m *CommandModel) Insert(title, content, expires string) (int, error) {
+func (m *CommandModel) Insert(title, content string) error {
 	stmt := `INSERT INTO commands (title, content)
-	VALUES(?, ?)`
+	VALUES($1, $2)`
 
-	result, err := m.DB.Exec(stmt, title, content, expires)
+	_, err := m.DB.Exec(stmt, title, content)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
-	id, err := result.LastInsertId()
-	if err != nil {
-		return 0, err
-	}
-
-	return int(id), nil
+	return nil
 }
 
 // Get - Метод для возвращения данных заметки по её идентификатору ID.
 func (m *CommandModel) Get(id int) (*models.Command, error) {
-	stmt := `SELECT id, title, content, created, expires FROM snippets
-    WHERE expires > UTC_TIMESTAMP() AND id = ?`
+	stmt := `SELECT id, title, content FROM commands
+    WHERE id = $1`
 
 	row := m.DB.QueryRow(stmt, id)
 
