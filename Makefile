@@ -1,9 +1,9 @@
-all: build run
+all: build_server run_server
 
-build:
+build_server:
 	@go build -o app ./cmd/web 
 
-run:
+run_server:
 	@./app
 
 build_d:

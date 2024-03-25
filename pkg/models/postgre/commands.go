@@ -57,7 +57,7 @@ func (m *CommandModel) Latest() ([]*models.Command, error) {
 
 	defer rows.Close()
 
-	var snippets []*models.Command
+	var commands []*models.Command
 
 	for rows.Next() {
 		s := &models.Command{}
@@ -65,12 +65,12 @@ func (m *CommandModel) Latest() ([]*models.Command, error) {
 		if err != nil {
 			return nil, err
 		}
-		snippets = append(snippets, s)
+		commands = append(commands, s)
 	}
 
 	if err = rows.Err(); err != nil {
 		return nil, err
 	}
 
-	return snippets, nil
+	return commands, nil
 }
