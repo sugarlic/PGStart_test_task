@@ -42,6 +42,8 @@ func (app *application) getCommand(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	app.infoLog.Println(s)
+
 	app.render(w, s)
 }
 

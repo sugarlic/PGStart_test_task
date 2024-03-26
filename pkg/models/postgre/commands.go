@@ -13,10 +13,10 @@ type CommandModel struct {
 
 // Insert - Метод для создания новой заметки в базе дынных.
 func (m *CommandModel) Insert(title, content string) error {
-	stmt := `INSERT INTO commands (title, content)
-	VALUES($1, $2)`
+	stmt := `INSERT INTO commands (title, content, exec_res)
+	VALUES($1, $2, $3)`
 
-	_, err := m.DB.Exec(stmt, title, content)
+	_, err := m.DB.Exec(stmt, title, content, "")
 	if err != nil {
 		return err
 	}
@@ -26,14 +26,14 @@ func (m *CommandModel) Insert(title, content string) error {
 
 // Get - Метод для возвращения данных заметки по её идентификатору ID.
 func (m *CommandModel) Get(id int) (*models.Command, error) {
-	stmt := `SELECT id, title, content FROM commands
+	stmt := `SELECT id, title, content, exec_res FROM commands
     WHERE id = $1`
 
 	row := m.DB.QueryRow(stmt, id)
 
 	s := &models.Command{}
 
-	err := row.Scan(&s.ID, &s.Title, &s.Content)
+	err := row.Scan(&s.ID, &s.Title, &s.Content, &s.Exec_res)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, models.ErrNoRecord
@@ -47,7 +47,7 @@ func (m *CommandModel) Get(id int) (*models.Command, error) {
 
 // Latest - Метод возвращает последние 10 заметок.
 func (m *CommandModel) Latest() ([]*models.Command, error) {
-	stmt := `SELECT id, title, content FROM commands
+	stmt := `SELECT id, title, content, exec_res FROM commands
 	ORDER BY id DESC LIMIT 10`
 
 	rows, err := m.DB.Query(stmt)
@@ -61,7 +61,7 @@ func (m *CommandModel) Latest() ([]*models.Command, error) {
 
 	for rows.Next() {
 		s := &models.Command{}
-		err = rows.Scan(&s.ID, &s.Title, &s.Content)
+		err = rows.Scan(&s.ID, &s.Title, &s.Content, &s.Exec_res)
 		if err != nil {
 			return nil, err
 		}

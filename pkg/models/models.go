@@ -5,7 +5,8 @@ import "errors"
 var ErrNoRecord = errors.New("models: подходящей записи не найдено")
 
 type Command struct {
-	ID      int    `json:"id"`
-	Title   string `json:"title"`
-	Content string `json:"content"`
+	ID       int    `json:"id"`
+	Title    string `json:"title"`
+	Content  string `json:"content"`
+	Exec_res string `json:"exec_res"`
 }

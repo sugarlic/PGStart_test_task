@@ -42,7 +42,7 @@ func getCommandList(client *http.Client) ([]*models.Command, error) {
 	}
 
 	for _, elem := range res {
-		fmt.Println("ID: ", elem.ID, "Title: ", elem.Title, "Content: ", elem.Content)
+		log.Println("ID: ", elem.ID, "Title: ", elem.Title, "Content: ", elem.Content, "Execution res: ", elem.Exec_res)
 	}
 
 	return res, nil
@@ -69,15 +69,19 @@ func getCommandById(client *http.Client, id int) (*models.Command, error) {
 	if err != nil {
 		return nil, err
 	}
+	if resp.StatusCode == 404 {
+		return nil, models.ErrNoRecord
+	}
 
 	// чтение ответа
+
 	var res *models.Command
 	err = json.Unmarshal(body, &res)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Println("ID: ", res.ID, "Title: ", res.Title, "Content: ", res.Content)
+	log.Println("ID: ", res.ID, "Title: ", res.Title, "Content: ", res.Content, "Execution res: ", res.Exec_res)
 
 	return res, nil
 }
@@ -89,7 +93,8 @@ func SendCommand(client *http.Client, filePath string) error {
 		return err
 	}
 
-	data := models.Command{ID: 1, Title: filepath.Base(filePath), Content: string(scriptContent)}
+	data := models.Command{ID: 1, Title: filepath.Base(filePath),
+		Content: string(scriptContent)}
 
 	json_data, err := json.Marshal(data)
 	if err != nil {
@@ -121,7 +126,6 @@ func SendCommand(client *http.Client, filePath string) error {
 }
 
 func main() {
-
 	get_commands := flag.Bool("c", false, "Get list of commands")
 	command_id := flag.Int("g", -1, "Get command by it's id")
 	send_command := flag.String("f", "", "Send command on the server")
