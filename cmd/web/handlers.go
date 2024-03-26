@@ -71,5 +71,5 @@ func (app *application) createCommand(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Write([]byte("Secces"))
+	w.Write([]byte("Succes"))
 }
