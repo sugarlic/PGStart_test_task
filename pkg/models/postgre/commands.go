@@ -74,3 +74,17 @@ func (m *CommandModel) Latest() ([]*models.Command, error) {
 
 	return commands, nil
 }
+
+// Update обновляет вывод команды в таблице
+func (m *CommandModel) Update(id int, exec_res string) error {
+	stmt := `UPDATE commands
+	SET exec_res = $2
+	WHERE id = $1;`
+
+	_, err := m.DB.Exec(stmt, id, exec_res)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

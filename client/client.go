@@ -11,25 +11,15 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/test/client/utils"
 	"github.com/test/pkg/models"
 )
 
 func getCommandList(client *http.Client) ([]*models.Command, error) {
+	url := "http://127.0.0.1:8080"
+
 	// запрос
-	req, err := http.NewRequest("GET", "http://127.0.0.1:8080", nil)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("User-Agent", "My Client")
-
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
+	body, err := utils.SendRequest(client, url)
 	if err != nil {
 		return nil, err
 	}
@@ -42,48 +32,51 @@ func getCommandList(client *http.Client) ([]*models.Command, error) {
 	}
 
 	for _, elem := range res {
-		log.Println("ID: ", elem.ID, "Title: ", elem.Title, "Content: ", elem.Content, "Execution res: ", elem.Exec_res)
+		fmt.Printf("ID: %d | Title: %s\n", elem.ID, elem.Title)
 	}
 
 	return res, nil
 }
 
 func getCommandById(client *http.Client, id int) (*models.Command, error) {
-	url := fmt.Sprintf("http://127.0.0.1:8080/command?id=%d", id) // http://127.0.0.1:8080?id=$
+	url := fmt.Sprintf("http://127.0.0.1:8080/command?id=%d", id)
 
 	// запрос
-	req, err := http.NewRequest("GET", url, nil)
+	body, err := utils.SendRequest(client, url)
 	if err != nil {
 		return nil, err
-	}
-
-	req.Header.Add("User-Agent", "My Client")
-
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-	if resp.StatusCode == 404 {
-		return nil, models.ErrNoRecord
 	}
 
 	// чтение ответа
-
 	var res *models.Command
 	err = json.Unmarshal(body, &res)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Println("ID: ", res.ID, "Title: ", res.Title, "Content: ", res.Content, "Execution res: ", res.Exec_res)
-
+	utils.PrintCommand(res)
 	return res, nil
+}
+
+func execCommandById(client *http.Client, id int) error {
+	url := fmt.Sprintf("http://127.0.0.1:8080/command/exec?id=%d", id) // http://127.0.0.1:8080?id=$
+
+	// запрос
+	body, err := utils.SendRequest(client, url)
+	if err != nil {
+		return err
+	}
+
+	// чтение ответа
+	var res *models.Command
+	err = json.Unmarshal(body, &res)
+	if err != nil {
+		return err
+	}
+
+	utils.PrintCommand(res)
+
+	return nil
 }
 
 func SendCommand(client *http.Client, filePath string) error {
@@ -128,7 +121,8 @@ func SendCommand(client *http.Client, filePath string) error {
 func main() {
 	get_commands := flag.Bool("c", false, "Get list of commands")
 	command_id := flag.Int("g", -1, "Get command by it's id")
-	send_command := flag.String("f", "", "Send command on the server")
+	send_command := flag.String("f", "", "Send command to the server")
+	exec_command := flag.Int("e", -1, "Exec command on the server")
 
 	flag.Parse()
 
@@ -148,6 +142,12 @@ func main() {
 	}
 	if *send_command != "" {
 		err := SendCommand(client, *send_command)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+	if *exec_command != -1 {
+		err := execCommandById(client, *exec_command)
 		if err != nil {
 			log.Println(err)
 		}

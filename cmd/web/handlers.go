@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/test/pkg/models"
+	sc_executor "github.com/test/pkg/models/script_exec"
 )
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
@@ -42,7 +43,37 @@ func (app *application) getCommand(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	app.infoLog.Println(s)
+	app.render(w, s)
+}
+
+func (app *application) execCommand(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil || id < 1 {
+		app.notFound(w)
+		return
+	}
+
+	s, err := app.commands.Get(id)
+	if err != nil {
+		if errors.Is(err, models.ErrNoRecord) {
+			app.notFound(w)
+		} else {
+			app.serverError(w, err)
+		}
+		return
+	}
+
+	err = sc_executor.ScriptExec(s)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	err = app.commands.Update(id, s.Exec_res)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
 
 	app.render(w, s)
 }

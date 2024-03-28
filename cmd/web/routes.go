@@ -7,6 +7,7 @@ func (app *application) routes() *http.ServeMux {
 	mux.HandleFunc("/", app.home)
 	mux.HandleFunc("/command", app.getCommand)
 	mux.HandleFunc("/command/create", app.createCommand)
+	mux.HandleFunc("/command/exec", app.execCommand)
 
 	return mux
 }
