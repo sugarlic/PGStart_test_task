@@ -2,7 +2,7 @@ package models
 
 import "errors"
 
-var ErrNoRecord = errors.New("models: подходящей записи не найдено")
+var ErrNoRecord = errors.New("models: no current command")
 
 type Command struct {
 	ID       int    `json:"id"`

@@ -63,19 +63,22 @@ func (app *application) execCommand(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = sc_executor.ScriptExec(s)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
+	w.Write([]byte("Executing"))
+	// нужно распараллелить
+	go func() {
 
-	err = app.commands.Update(id, s.Exec_res)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
+		err = sc_executor.ScriptExec(s)
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
 
-	app.render(w, s)
+		err = app.commands.Update(id, s.Exec_res)
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+	}()
 }
 
 func (app *application) createCommand(w http.ResponseWriter, r *http.Request) {

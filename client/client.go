@@ -32,7 +32,12 @@ func getCommandList(client *http.Client) ([]*models.Command, error) {
 	}
 
 	for _, elem := range res {
-		fmt.Printf("ID: %d | Title: %s\n", elem.ID, elem.Title)
+		fmt.Printf("ID: %d | Title: %s | ", elem.ID, elem.Title)
+		if len(elem.Exec_res) > 0 {
+			fmt.Println("Executed")
+		} else {
+			fmt.Println("Not executed")
+		}
 	}
 
 	return res, nil
@@ -59,22 +64,16 @@ func getCommandById(client *http.Client, id int) (*models.Command, error) {
 }
 
 func execCommandById(client *http.Client, id int) error {
-	url := fmt.Sprintf("http://127.0.0.1:8080/command/exec?id=%d", id) // http://127.0.0.1:8080?id=$
+	url := fmt.Sprintf("http://127.0.0.1:8080/command/exec?id=%d", id)
 
 	// запрос
-	body, err := utils.SendRequest(client, url)
+	respBody, err := utils.SendRequest(client, url)
 	if err != nil {
 		return err
 	}
 
 	// чтение ответа
-	var res *models.Command
-	err = json.Unmarshal(body, &res)
-	if err != nil {
-		return err
-	}
-
-	utils.PrintCommand(res)
+	log.Println(string(respBody))
 
 	return nil
 }
