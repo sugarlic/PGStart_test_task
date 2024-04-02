@@ -63,19 +63,22 @@ func (app *application) execCommand(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = sc_executor.ScriptExec(s)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
+	w.Write([]byte("Executing"))
+	// нужно распараллелить
+	go func() {
 
-	err = app.commands.Update(id, s.Exec_res)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
+		err = sc_executor.ScriptExec(s)
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
 
-	app.render(w, s)
+		err = app.commands.Update(id, s.Exec_res)
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+	}()
 }
 
 func (app *application) createCommand(w http.ResponseWriter, r *http.Request) {
@@ -105,4 +108,26 @@ func (app *application) createCommand(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write([]byte("Succes"))
+}
+
+func (app *application) deleteCommand(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodDelete {
+		w.Header().Set("Allow", http.MethodDelete)
+		app.clientError(w, http.StatusMethodNotAllowed)
+		return
+	}
+
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil || id < 1 {
+		app.notFound(w)
+		return
+	}
+
+	err = app.commands.Delete(id)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	w.Write([]byte("Deleted"))
 }
