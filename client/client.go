@@ -78,7 +78,7 @@ func execCommandById(client *http.Client, id int) error {
 	return nil
 }
 
-func SendCommand(client *http.Client, filePath string) error {
+func sendCommand(client *http.Client, filePath string) error {
 	// формирование тела запроса
 	scriptContent, err := os.ReadFile(filePath)
 	if err != nil {
@@ -117,11 +117,38 @@ func SendCommand(client *http.Client, filePath string) error {
 	return nil
 }
 
+func deleteCommand(client *http.Client, id int) error {
+	// запрос
+	url := fmt.Sprintf("http://127.0.0.1:8080/command/delete?id=%d", id)
+
+	req, err := http.NewRequest("DELETE", url, nil)
+	if err != nil {
+		return err
+	}
+
+	req.Header.Add("User-Agent", "My Client")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	responseBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	log.Println(string(responseBody))
+	return nil
+}
+
 func main() {
 	get_commands := flag.Bool("c", false, "Get list of commands")
 	command_id := flag.Int("g", -1, "Get command by it's id")
 	send_command := flag.String("f", "", "Send command to the server")
 	exec_command := flag.Int("e", -1, "Exec command on the server")
+	del_command := flag.Int("d", -1, "Delete command on the server")
 
 	flag.Parse()
 
@@ -140,13 +167,19 @@ func main() {
 		}
 	}
 	if *send_command != "" {
-		err := SendCommand(client, *send_command)
+		err := sendCommand(client, *send_command)
 		if err != nil {
 			log.Println(err)
 		}
 	}
 	if *exec_command != -1 {
 		err := execCommandById(client, *exec_command)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+	if *del_command != -1 {
+		err := deleteCommand(client, *del_command)
 		if err != nil {
 			log.Println(err)
 		}

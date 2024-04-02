@@ -88,3 +88,16 @@ func (m *CommandModel) Update(id int, exec_res string) error {
 
 	return nil
 }
+
+// Delete удаляет команду из таблицы
+func (m *CommandModel) Delete(id int) error {
+	stmt := `DELETE FROM commands
+	WHERE id = $1;`
+
+	_, err := m.DB.Exec(stmt, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

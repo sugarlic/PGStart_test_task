@@ -109,3 +109,25 @@ func (app *application) createCommand(w http.ResponseWriter, r *http.Request) {
 
 	w.Write([]byte("Succes"))
 }
+
+func (app *application) deleteCommand(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodDelete {
+		w.Header().Set("Allow", http.MethodDelete)
+		app.clientError(w, http.StatusMethodNotAllowed)
+		return
+	}
+
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil || id < 1 {
+		app.notFound(w)
+		return
+	}
+
+	err = app.commands.Delete(id)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	w.Write([]byte("Deleted"))
+}
