@@ -64,7 +64,6 @@ func (app *application) execCommand(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write([]byte("Executing"))
-	// нужно распараллелить
 	go func() {
 
 		err = sc_executor.ScriptExec(s)
