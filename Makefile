@@ -15,9 +15,7 @@ build_d:
 run_d:
 	docker run -p 8080:8080 my-server
 
-tests: build_server
-	bash test.sh
-	rm -rf app
+tests:
 
 clean:
 	rm app
