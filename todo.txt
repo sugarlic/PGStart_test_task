@@ -1,5 +1,0 @@
-curl -X POST -H "Content-Type: application/json" -d '{"id": 1, "title": "test", "content": "test"}' http://127.0.0.1:8080/command/create
-
-1) Декомопозировать клиент 
-2) Написать тесты
-3) Написать интсрукцию по запуску программы

@@ -11,10 +11,6 @@ import (
 	"github.com/test/pkg/models/postgre"
 )
 
-type Test struct {
-	id int
-}
-
 type application struct {
 	errorLog *log.Logger
 	infoLog  *log.Logger

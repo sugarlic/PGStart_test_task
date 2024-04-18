@@ -14,7 +14,7 @@ WORKDIR /go/src/app
 RUN go build -o app ./cmd/web 
 
 # Открываем порт, на котором будет работать сервер
-EXPOSE 4000
+EXPOSE 8080
 
 # Запускаем сервер при запуске контейнера
 CMD ["./app"]
