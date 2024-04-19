@@ -7,6 +7,14 @@ import (
 	"github.com/test/pkg/models"
 )
 
+type CommandService interface {
+	Latest() ([]*models.Command, error)
+	Get(id int) (*models.Command, error)
+	Insert(title, content string) error
+	Update(id int, exec_res string) error
+	Delete(id int) error
+}
+
 type CommandModel struct {
 	DB *sql.DB
 }

@@ -14,7 +14,7 @@ import (
 type application struct {
 	errorLog *log.Logger
 	infoLog  *log.Logger
-	commands *postgre.CommandModel
+	commands postgre.CommandService
 }
 
 func main() {
