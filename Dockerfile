@@ -1,33 +1,32 @@
-# Используем базовый образ Golang
+# Используйте официальный образ Golang как базовый
 FROM golang:1.21 as builder
 
-# Устанавливаем переменную окружения GOPATH
-ENV GOPATH /go
+# Установите рабочую директорию в контейнере
+WORKDIR /app
 
-# Копируем все файлы проекта в /go/src/app внутри образа
-COPY . .
+# Копируйте go.mod и go.sum для управления зависимостями
 COPY go.mod go.sum ./
 
-# Устанавливаем рабочую директорию внутри образа
-WORKDIR /go/src/app
-
+# Загружайте зависимости
 RUN go mod download
 
-# Собираем исполняемый файл
+# Копируйте исходный код проекта
+COPY . .
+
+# Соберите исполняемый файл вашего приложения
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o myapp .
 
-
-# чистый образ для уменьшения размера
+# Вторая стадия сборки, используйте чистый образ для уменьшения размера
 FROM alpine:latest  
 RUN apk --no-cache add ca-certificates
 
 WORKDIR /root/
 
 # Копируйте исполняемый файл из предыдущей стадии
-COPY --from=builder /app/app .
+COPY --from=builder /app/myapp .
 
 # Порт, на котором будет доступно приложение
 EXPOSE 8000
 
 # Запуск приложения
-CMD ["./app"]
+CMD ["./myapp"]
