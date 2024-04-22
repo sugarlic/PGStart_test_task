@@ -24,13 +24,13 @@ jobs:
         run: go test -v ./...
 
   build_and_push:
-  runs-on: ubuntu-latest
-  if: github.event_name == 'push'
-  needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    needs: test
 
-  steps:
-    - name: Checkout main
-      uses: actions/checkout@v2
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v2
 
-    - name: Build container image
-      run: docker build -t my-server .
+      - name: Build container image
+        run: docker build -t my-server .
