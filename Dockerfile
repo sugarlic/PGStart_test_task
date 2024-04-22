@@ -14,7 +14,7 @@ RUN go mod download
 COPY . .
 
 # Соберите исполняемый файл вашего приложения
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o myapp .
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o myapp ./cmd/web 
 
 # Вторая стадия сборки, используйте чистый образ для уменьшения размера
 FROM alpine:latest  
