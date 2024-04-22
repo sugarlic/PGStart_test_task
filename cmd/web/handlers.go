@@ -107,6 +107,7 @@ func (app *application) createCommand(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("Succes"))
 }
 

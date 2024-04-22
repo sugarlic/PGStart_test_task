@@ -26,7 +26,7 @@ func (m *MockCommands) Get(id int) (*models.Command, error) {
 			return cmd, nil
 		}
 	}
-	return nil, models.ErrNoRecord // Предполагаем, что нет записи
+	return nil, models.ErrNoRecord
 }
 
 func (m *MockCommands) Insert(title, content string) error {

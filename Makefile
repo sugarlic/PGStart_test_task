@@ -16,7 +16,7 @@ run_d:
 	docker run -p 8080:8080 my-server
 
 tests:
-	go test .\cmd\web
+	go test -v ./...
 
 clean:
 	rm app
