@@ -60,19 +60,18 @@ jobs:
             exec_res TEXT
           );"
 
-      # - name: Set up Yandex CLI and Docker
-      #   uses: yc-actions/setup-yc@v2
-      #   with:
-      #     token: ${{ secrets.YC_TOKEN }}
+      - name: Set up Yandex CLI and Docker
+        uses: yc-actions/setup-yc@v2
+        with:
+          token: ${{ secrets.YC_TOKEN }}
 
       - name: Build and push container image to Yandex Cloud
         uses: yc-actions/yc-coi-deploy@v1
         with:
           folder-id: b1g49fdgkeu589f8e9np
-          registry-id: your-registry-id # Replace with your actual registry ID
+          registry-id: your-registry-id
           image-name: my-server
           image-tag: ${{ github.sha }}
-          docker-context: . # Assuming Dockerfile is in the root of the repository
-          dockerfile: Dockerfile # Specify your Dockerfile if located differently
-          build-args: >-
-            DATABASE_URL="host=localhost port=5432 user=postgres password=${{ secrets.POSTGRES_PASSWORD }} dbname=postgres sslmode=disable"
+          docker-context: .
+          dockerfile: Dockerfile
+          build-args: "DATABASE_URL='host=localhost port=5432 user=postgres password=${{ secrets.POSTGRES_PASSWORD }} dbname=postgres sslmode=disable'"
