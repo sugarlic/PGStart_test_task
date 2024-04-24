@@ -66,13 +66,13 @@ jobs:
         run: |
           curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
           echo "export PATH=$PATH:$HOME/.yandex-cloud/bin" >> $GITHUB_ENV
-
+          source "/home/runner/.bashrc
 
       - name: Log in to Yandex Cloud Container Registry
         run: |
-          $HOME/.yandex-cloud/bin/yc config profile create github-actions
-          $HOME/.yandex-cloud/bin/yc config set token ${{ secrets.YC_TOKEN }}
-          $HOME/.yandex-cloud/bin/yc container registry configure-docker
+          yc config profile create github-actions
+          yc config set token ${{ secrets.YC_TOKEN }}
+          yc container registry configure-docker
 
       - name: Build container image
         run: |
