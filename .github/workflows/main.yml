@@ -65,8 +65,7 @@ jobs:
       - name: Install Yandex CLI
         run: |
           curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
-          echo "$HOME/.yandex-cloud/bin" >> $GITHUB_PATH
-          echo 'source /home/runner/yandex-cloud/completion.zsh.inc' >>  ~/.zshrc
+          echo "$HOME/.yandex-cloud/bin" >> $GITHUB_ENV
 
       - name: Log in to Yandex Cloud Container Registry
         run: |
