@@ -60,10 +60,10 @@ jobs:
             exec_res TEXT
           );"
 
-      - name: Set up Yandex CLI and Docker
-        uses: yc-actions/setup-yc@v2
-        with:
-          token: ${{ secrets.YC_TOKEN }}
+      # - name: Set up Yandex CLI and Docker
+      #   uses: yc-actions/setup-yc@v2
+      #   with:
+      #     token: ${{ secrets.YC_TOKEN }}
 
       - name: Build and push container image to Yandex Cloud
         uses: yc-actions/yc-coi-deploy@v1
