@@ -14,8 +14,8 @@ build_d:
 	docker-compose build
 
 run_d:
-	# docker run -p 8080:8080 my-server
-	docker-compose up
+	docker run -p 8080:8080 my-server
+	# docker-compose up
 
 tests:
 	go test -v ./...

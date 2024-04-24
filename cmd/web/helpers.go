@@ -30,6 +30,5 @@ func (app *application) render(w http.ResponseWriter, s any) {
 	}
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusFound)
 	w.Write(json_data)
 }

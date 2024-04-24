@@ -18,8 +18,8 @@ type application struct {
 }
 
 func main() {
-	addr := flag.String("addr", ":8080", "Сетевой адрес веб-сервера")
-	dsn := flag.String("dsn", "host=localhost port=5432 user=postgres password=1 dbname=postgres sslmode=disable", "Название PostgreSQL источника данных")
+	addr := flag.String("addr", getEnv("ADDR", ":8080"), "Сетевой адрес веб-сервера")
+	dsn := flag.String("dsn", getEnv("DATABASE_URL", "host=localhost port=5432 user=postgres password=1 dbname=postgres sslmode=disable"), "Название PostgreSQL источника данных")
 	flag.Parse()
 
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
@@ -58,4 +58,11 @@ func openDB(dsn string) (*sql.DB, error) {
 		return nil, err
 	}
 	return db, nil
+}
+
+func getEnv(key, fallback string) string {
+	if value, exists := os.LookupEnv(key); exists {
+		return value
+	}
+	return fallback
 }

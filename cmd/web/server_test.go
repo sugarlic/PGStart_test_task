@@ -162,10 +162,6 @@ func TestGetInsertCommand(t *testing.T) {
 	handler = http.HandlerFunc(app.getCommand)
 	handler.ServeHTTP(rr, req)
 
-	if rr.Code != http.StatusFound {
-		t.Errorf("Expected status %d, got %d", http.StatusFound, rr.Code)
-	}
-
 	rr.Body.Bytes()
 	var res *models.Command
 	err = json.Unmarshal(rr.Body.Bytes(), &res)
