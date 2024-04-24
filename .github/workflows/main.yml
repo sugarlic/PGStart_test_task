@@ -34,7 +34,7 @@ jobs:
         env:
           POSTGRES_DB: postgres
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         ports:
           - 5432:5432
         options: >-
@@ -48,6 +48,35 @@ jobs:
       - name: Checkout main
         uses: actions/checkout@v2
 
+      - name: Setup PostgreSQL client
+        run: sudo apt-get install -y postgresql-client
+
+      - name: Create database table
+        run: |
+          PGPASSWORD=${{ secrets.POSTGRES_PASSWORD }} psql -h localhost -U postgres -d postgres -c "
+          CREATE TABLE IF NOT EXISTS commands (
+            id SERIAL PRIMARY KEY,
+            title TEXT,
+            content TEXT,
+            exec_res TEXT
+          );"
+
+
+      - name: Install Yandex CLI
+        run: |
+          curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
+          echo "$HOME/.yandex-cloud/bin" >> $GITHUB_PATH
+
+      - name: Log in to Yandex Cloud Container Registry
+        run: |
+          yc config profile create github-actions
+          yc config set token ${{ secrets.YC_TOKEN }}
+          yc container registry configure-docker
+
       - name: Build container image
         run: |
-          docker build --build-arg DATABASE_URL=postgres://postgres:postgres@localhost:5432/testdb -t my-server .
+          docker build --build-arg DATABASE_URL=host=localhost port=5432 user=postgres password=${{ secrets.POSTGRES_PASSWORD }} dbname=postgres sslmode=disable -t cr.yandex/your-registry-id/my-server:${{ github.sha }} .
+
+      - name: Push container image to Yandex Cloud
+        run: |
+          docker push cr.yandex/your-registry-id/my-server:${{ github.sha }}
