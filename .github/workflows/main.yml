@@ -70,9 +70,9 @@ jobs:
 
       - name: Log in to Yandex Cloud Container Registry
         run: |
-          yc config profile create github-actions
-          yc config set token ${{ secrets.YC_TOKEN }}
-          yc container registry configure-docker
+          $HOME/.yandex-cloud/bin/yc config profile create github-actions
+          $HOME/.yandex-cloud/bin/yc config set token ${{ secrets.YC_TOKEN }}
+          $HOME/.yandex-cloud/bin/yc container registry configure-docker
 
       - name: Build container image
         run: |
