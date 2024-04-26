@@ -72,5 +72,5 @@ jobs:
           CR_REPOSITORY: my-cr-repo
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build --build-arg DATABASE_URL=host=localhost port=5432 user=postgres password=${{ secrets.POSTGRES_PASSWORD }} dbname=postgres sslmode=disable -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
+          docker build --build-arg "DATABASE_URL=host=localhost port=5432 user=postgres password=${{ secrets.POSTGRES_PASSWORD }} dbname=postgres sslmode=disable" -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
           docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
