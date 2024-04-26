@@ -68,8 +68,8 @@ jobs:
 
       - name: Build, tag, and push image to Yandex Cloud Container Registry
         env:
-          CR_REGISTRY: aje2mm7jb43hmmji94jg
-          CR_REPOSITORY: my-cr-repo
+          CR_REGISTRY: crpa63e0skdhtni87735
+          CR_REPOSITORY: backend
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build --build-arg "DATABASE_URL=host=localhost port=5432 user=postgres password=${{ secrets.POSTGRES_PASSWORD }} dbname=postgres sslmode=disable" -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
