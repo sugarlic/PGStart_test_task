@@ -17,16 +17,22 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o myapp ./cmd/web 
 
 # Вторая стадия сборки, используйте чистый образ для уменьшения размера
-FROM alpine:latest  
+FROM alpine:latest
 RUN apk --no-cache add ca-certificates
 
+RUN apk add --no-cache postgresql-client
+
+
 WORKDIR /root/
+RUN mkdir /root/log
+RUN touch /root/log/info.log
+RUN touch /root/log/error.log
 
 # Копируйте исполняемый файл из предыдущей стадии
 COPY --from=builder /app/myapp .
 
 # Порт, на котором будет доступно приложение
-EXPOSE 8000
+EXPOSE 8080
 
-# Запуск приложения
-CMD ["./myapp"]
+# # # Запуск приложения
+CMD ["ls"]

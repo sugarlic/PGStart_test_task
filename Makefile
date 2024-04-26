@@ -1,4 +1,4 @@
-all: build_server run_server
+all: build_d run_d
 
 build_server:
 	@go build -o app ./cmd/web 
@@ -10,12 +10,13 @@ run_server_d:
 	@./app &
 
 build_d:
-	# docker build -t my-server .
-	docker-compose build
+	docker compose build
 
 run_d:
-	docker run -p 8080:8080 my-server
-	# docker-compose up
+	docker compose up -d
+
+stop:
+	docker compose stop
 
 tests:
 	go test -v ./...

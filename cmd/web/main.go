@@ -19,7 +19,7 @@ type application struct {
 
 func main() {
 	addr := flag.String("addr", ":8080", "Сетевой адрес веб-сервера")
-	dsn := flag.String("dsn", "host=localhost port=5432 user=postgres password=1 dbname=postgres sslmode=disable", "Название PostgreSQL источника данных")
+	dsn := flag.String("dsn", "host=db port=5432 user=postgres password=1 dbname=postgres sslmode=disable", "Название PostgreSQL источника данных")
 	flag.Parse()
 
 	infoLogFile, err := os.OpenFile("./log/info.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
@@ -56,7 +56,7 @@ func main() {
 		Handler:  app.routes(),
 	}
 
-	infoLog.Printf("Запуск сервера на 127.0.0.1%s", *addr)
+	infoLog.Printf("Запуск сервера на %s", *addr)
 	err = srv.ListenAndServe()
 	errorLog.Fatal(err)
 }
