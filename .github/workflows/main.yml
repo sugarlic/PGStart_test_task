@@ -59,9 +59,18 @@ jobs:
             content TEXT,
             exec_res TEXT
           );"
-          
+
       - name: Login to Yandex Cloud Container Registry
         id: login-cr
         uses: yc-actions/yc-cr-login@v1
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+
+      - name: Build, tag, and push image to Yandex Cloud Container Registry
+        env:
+          CR_REGISTRY: crp00000000000000000
+          CR_REPOSITORY: my-cr-repo
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build --build-arg DATABASE_URL=host=localhost port=5432 user=postgres password=${{ secrets.POSTGRES_PASSWORD }} dbname=postgres sslmode=disable -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
+          docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
