@@ -22,8 +22,20 @@ func main() {
 	dsn := flag.String("dsn", getEnv("DATABASE_URL", "host=localhost port=5432 user=postgres password=1 dbname=postgres sslmode=disable"), "Название PostgreSQL источника данных")
 	flag.Parse()
 
-	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
-	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
+	infoLogFile, err := os.OpenFile("./log/info.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Fatalf("error opening info log file: %v", err)
+	}
+	defer infoLogFile.Close()
+
+	errorLogFile, err := os.OpenFile("./log/error.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Fatalf("error opening error log file: %v", err)
+	}
+	defer errorLogFile.Close()
+
+	infoLog := log.New(infoLogFile, "INFO\t", log.Ldate|log.Ltime)
+	errorLog := log.New(errorLogFile, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 
 	db, err := openDB(*dsn)
 	if err != nil {

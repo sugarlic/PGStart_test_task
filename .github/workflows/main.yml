@@ -23,10 +23,10 @@ jobs:
       - name: Test
         run: go test -v ./...
 
-  build_and_deploy:
+  build_and_push:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
-    needs: test
+    # needs: test
 
     services:
       postgres:
@@ -59,19 +59,9 @@ jobs:
             content TEXT,
             exec_res TEXT
           );"
-
-      - name: Set up Yandex CLI and Docker
-        uses: yc-actions/setup-yc@v2
+          
+      - name: Login to Yandex Cloud Container Registry
+        id: login-cr
+        uses: yc-actions/yc-cr-login@v1
         with:
-          token: ${{ secrets.YC_TOKEN }}
-
-      - name: Build and push container image to Yandex Cloud
-        uses: yc-actions/yc-coi-deploy@v1
-        with:
-          folder-id: b1g49fdgkeu589f8e9np
-          registry-id: your-registry-id
-          image-name: my-server
-          image-tag: ${{ github.sha }}
-          docker-context: .
-          dockerfile: Dockerfile
-          build-args: "DATABASE_URL='host=localhost port=5432 user=postgres password=${{ secrets.POSTGRES_PASSWORD }} dbname=postgres sslmode=disable'"
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
