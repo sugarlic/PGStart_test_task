@@ -74,3 +74,22 @@ jobs:
         run: |
           docker build --build-arg "DATABASE_URL=host=localhost port=5432 user=postgres password=${{ secrets.POSTGRES_PASSWORD }} dbname=postgres sslmode=disable" -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
           docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
+
+      # - name: Deploy COI VM
+      #   id: deploy-coi
+      #   uses: yc-actions/yc-coi-deploy@v2
+      #   env:
+      #     CR_REGISTRY: crpa63e0skdhtni87735
+      #     CR_REPOSITORY: backend
+      #     IMAGE_TAG: ${{ github.sha }}
+      #   with:
+      #     yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+      #     folder-id: bbajn5q2d74c********
+      #     vm-name: yc-action-demo
+      #     vm-service-account-id: ajeqnasj95o7********
+      #     vm-cores: 2
+      #     vm-memory: 2Gb
+      #     vm-core-fraction: 100
+      #     vm-subnet-id: e9b*********
+      #     user-data-path: './user-data.yaml'
+      #     docker-compose-path: './docker-compose.yaml'
