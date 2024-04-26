@@ -23,7 +23,7 @@ jobs:
       - name: Test
         run: go test -v ./...
 
-  build_and_push:
+  build_and_deploy:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
     # needs: test
@@ -47,19 +47,6 @@ jobs:
       - name: Checkout main
         uses: actions/checkout@v2
 
-      - name: Setup PostgreSQL client
-        run: sudo apt-get install -y postgresql-client
-
-      - name: Create database table
-        run: |
-          PGPASSWORD=${{ secrets.POSTGRES_PASSWORD }} psql -h localhost -U postgres -d postgres -c "
-          CREATE TABLE IF NOT EXISTS commands (
-            id SERIAL PRIMARY KEY,
-            title TEXT,
-            content TEXT,
-            exec_res TEXT
-          );"
-
       - name: Login to Yandex Cloud Container Registry
         id: login-cr
         uses: yc-actions/yc-cr-login@v1
@@ -72,7 +59,7 @@ jobs:
           CR_REPOSITORY: backend
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build --build-arg "DATABASE_URL=host=localhost port=5432 user=postgres password=${{ secrets.POSTGRES_PASSWORD }} dbname=postgres sslmode=disable" -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
+          docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
           docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
 
       - name: Deploy COI VM
