@@ -16,7 +16,7 @@ import (
 )
 
 func getCommandList(client *http.Client) ([]*models.Command, error) {
-	url := "http://127.0.0.1:8080"
+	url := "http://158.160.89.127:8080"
 
 	// запрос
 	body, err := utils.SendRequest(client, url)
@@ -44,7 +44,7 @@ func getCommandList(client *http.Client) ([]*models.Command, error) {
 }
 
 func getCommandById(client *http.Client, id int) (*models.Command, error) {
-	url := fmt.Sprintf("http://127.0.0.1:8080/command?id=%d", id)
+	url := fmt.Sprintf("http://158.160.89.127:8080/command?id=%d", id)
 
 	// запрос
 	body, err := utils.SendRequest(client, url)
@@ -64,7 +64,7 @@ func getCommandById(client *http.Client, id int) (*models.Command, error) {
 }
 
 func execCommandById(client *http.Client, id int) error {
-	url := fmt.Sprintf("http://127.0.0.1:8080/command/exec?id=%d", id)
+	url := fmt.Sprintf("http://158.160.89.127:8080/command/exec?id=%d", id)
 
 	// запрос
 	respBody, err := utils.SendRequest(client, url)
@@ -93,7 +93,7 @@ func sendCommand(client *http.Client, filePath string) error {
 		return err
 	}
 	// запрос
-	url := "http://127.0.0.1:8080/command/create"
+	url := "http://158.160.89.127:8080/command/create"
 
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(json_data))
 	if err != nil {
@@ -119,7 +119,7 @@ func sendCommand(client *http.Client, filePath string) error {
 
 func deleteCommand(client *http.Client, id int) error {
 	// запрос
-	url := fmt.Sprintf("http://127.0.0.1:8080/command/delete?id=%d", id)
+	url := fmt.Sprintf("http://158.160.89.127:8080/command/delete?id=%d", id)
 
 	req, err := http.NewRequest("DELETE", url, nil)
 	if err != nil {
