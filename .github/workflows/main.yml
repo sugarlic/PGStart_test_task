@@ -32,20 +32,20 @@ jobs:
       - name: Checkout main
         uses: actions/checkout@v2
 
-      # - name: Login to Yandex Cloud Container Registry
-      #   id: login-cr
-      #   uses: yc-actions/yc-cr-login@v1
-      #   with:
-      #     yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+      - name: Login to Yandex Cloud Container Registry
+        id: login-cr
+        uses: yc-actions/yc-cr-login@v1
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
 
-      # - name: Build, tag, and push image to Yandex Cloud Container Registry
-      #   env:
-      #     CR_REGISTRY: crpa63e0skdhtni87735
-      #     CR_REPOSITORY: backend
-      #     IMAGE_TAG: ${{ github.sha }}
-      #   run: |
-      #     docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
-      #     docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
+      - name: Build, tag, and push image to Yandex Cloud Container Registry
+        env:
+          CR_REGISTRY: crpa63e0skdhtni87735
+          CR_REPOSITORY: backend
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
+          docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
 
       # - name: Deploy COI VM
       #   id: deploy-coi
