@@ -100,3 +100,9 @@ jobs:
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to server
+        run: |
+          ssh ubuntu@<${{ secrets.VM_IP }}> << 'ENDSSH'
+          echo "Hello"
+          ENDSSH
