@@ -89,4 +89,4 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh -o "StrictHostKeyChecking=no" ubuntu@${{ secrets.VM_IP }} "echo 'Hello' && echo 'test'"
+          ssh -o "StrictHostKeyChecking=no" yc-sa-pgstart@${{ secrets.VM_IP }} "echo 'Hello' && echo 'test'"
