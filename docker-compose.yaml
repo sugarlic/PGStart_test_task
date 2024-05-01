@@ -13,7 +13,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   app:
-    image: cr.yandex/crpa63e0skdhtni87735/backend
+    image: cr.yandex/crpa63e0skdhtni87735/backend:252929331a39f69ee6b97aabd9fa2aff817ba0c8
     ports:
       - "8080:8080"
     environment:
