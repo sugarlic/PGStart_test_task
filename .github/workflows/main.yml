@@ -87,6 +87,10 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+      - name: Copy docker-compose.yml to server
+        run: |
+          scp ./docker-compose.yml yc-sa-pgstart@${{ secrets.VM_IP }}:/home/yc-sa-pgstart
+
       - name: Deploy to server
         run: |
           ssh -o "StrictHostKeyChecking=no" yc-sa-pgstart@${{ secrets.VM_IP }} "echo 'Hello' && echo 'test'"
