@@ -66,22 +66,6 @@ jobs:
       #     user-data-path: './user-data.yaml'
       #     docker-compose-path: './docker-compose.yaml'
 
-      # - name: Deploy to Yandex Cloud VM
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: ${{ secrets.VM_IP }}
-      #     username: 'your_vm_username'
-      #     key: ${{ secrets.SSH_PRIVATE_KEY }}
-      #     script: |
-      #       docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
-      #       docker stop my-app-instance || true
-      #       docker rm my-app-instance || true
-      #       docker run -d --name my-app-instance -p 80:80 cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
-      #   env:
-      #     CR_REGISTRY: crpa63e0skdhtni87735
-      #     CR_REPOSITORY: backend
-      #     IMAGE_TAG: ${{ github.sha }}
-
       - name: Setup SSH key
         uses: webfactory/ssh-agent@v0.5.3
         with:
@@ -93,5 +77,10 @@ jobs:
 
 
       - name: Deploy to server
+        env:
+          CR_REGISTRY: crpa63e0skdhtni87735
+          CR_REPOSITORY: backend
+          IMAGE_TAG: ${{ github.sha }}
         run: |
-          ssh -o "StrictHostKeyChecking=no" yc-sa-pgstart@${{ secrets.VM_IP }} "echo 'Hello' && echo 'test'"
+          ssh -o "StrictHostKeyChecking=no" yc-sa-pgstart@${{ secrets.VM_IP }} "echo 'Hello' 
+          && sudo    docker rmi $(sudo docker images -q) -f && sudo docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
