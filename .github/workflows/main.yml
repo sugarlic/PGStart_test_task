@@ -82,5 +82,4 @@ jobs:
           CR_REPOSITORY: backend
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          ssh -o "StrictHostKeyChecking=no" yc-sa-pgstart@${{ secrets.VM_IP }} "echo 'Hello' 
-          && sudo    docker rmi $(sudo docker images -q) -f && sudo docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
+          ssh -o "StrictHostKeyChecking=no" yc-sa-pgstart@${{ secrets.VM_IP }} "echo 'Hello' && sudo    docker rmi $(sudo docker images -q) -f && sudo docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
