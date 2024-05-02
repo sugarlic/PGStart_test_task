@@ -76,6 +76,19 @@ jobs:
         run: |
           scp -o "StrictHostKeyChecking=no" ./docker-compose.yaml yc-sa-pgstart@${{ secrets.VM_IP }}:/home/yc-sa-pgstart
 
+      # - name: Deploy to server
+      #   run: |
+      #     ssh -o "StrictHostKeyChecking=no" yc-sa-pgstart@${{ secrets.VM_IP }} "IMAGES=$(sudo docker images -q) [ ! -z "$IMAGES" ] && sudo docker rmi -f $IMAGES && sudo docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG"
+
+
       - name: Deploy to server
         run: |
-          ssh -o "StrictHostKeyChecking=no" yc-sa-pgstart@${{ secrets.VM_IP }} IMAGES=$(sudo docker images -q) [ ! -z "$IMAGES" ] && sudo docker rmi -f $IMAGES && sudo docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG"
+          ssh -o "StrictHostKeyChecking=no" yc-sa-pgstart@${{ secrets.VM_IP }} "\
+          echo 'cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG'; \
+          sudo docker login --username oauth --password-stdin cr.yandex <<< ${{ secrets.OAUTH_TOKEN }}; \
+          IMAGES=\$(sudo docker images -q); \
+          if [ ! -z \"\$IMAGES\" ]; then \
+            sudo docker rmi -f \$IMAGES; \
+          fi; \
+          sudo docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG"
+
