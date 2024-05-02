@@ -85,7 +85,7 @@ jobs:
           if [ ! -z \"\$IMAGES\" ]; then \
             sudo docker rmi -f \$IMAGES; \
           fi; \
-          sudo docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG" \
+          sudo docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG"; \
           sudo docker-compose up -d
 
 
