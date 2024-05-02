@@ -78,4 +78,4 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh -o "StrictHostKeyChecking=no" yc-sa-pgstart@${{ secrets.VM_IP }} "echo 'cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG' && sudo docker login   --username oauth   --password ${{ secrets.OAUTH_TOKEN }} cr.yandex && IMAGES=$(sudo docker images -q) [ ! -z "$IMAGES" ] && sudo docker rmi -f $IMAGES && sudo docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG"
+          ssh -o "StrictHostKeyChecking=no" yc-sa-pgstart@${{ secrets.VM_IP }} IMAGES=$(sudo docker images -q) [ ! -z "$IMAGES" ] && sudo docker rmi -f $IMAGES && sudo docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG"
