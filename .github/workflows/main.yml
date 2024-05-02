@@ -76,7 +76,6 @@ jobs:
         run: |
           scp -o "StrictHostKeyChecking=no" ./docker-compose.yaml yc-sa-pgstart@${{ secrets.VM_IP }}:/home/yc-sa-pgstart
 
-
       - name: Deploy to server
         run: |
-          ssh -o "StrictHostKeyChecking=no" yc-sa-pgstart@${{ secrets.VM_IP }} "echo 'Hello' && sudo    docker rmi $(sudo docker images -q) -f && sudo docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG"
+          ssh -o "StrictHostKeyChecking=no" yc-sa-pgstart@${{ secrets.VM_IP }} "echo 'Hello' && sudo docker rmi $(sudo docker images -q) -f && sudo docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG"
