@@ -86,6 +86,9 @@ jobs:
             sudo docker rmi -f \$IMAGES; \
           fi; \
           sudo docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG"; \
-          sudo docker-compose up -d
+          sudo docker-compose up -d; \
+          LATEST_TAG=$(docker images cr.yandex/crpa63e0skdhtni87735/backend --format "{{.Tag}} {{.CreatedAt}}" | sort -r | head -n 1 | awk '{print $1}'); \
+          export IMAGE_TAG=$LATEST_TAG; \
+          docker-compose up -d
 
 
