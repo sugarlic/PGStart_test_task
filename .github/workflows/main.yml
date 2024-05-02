@@ -8,6 +8,11 @@ on:
     branches:
       - main
 
+env:
+  CR_REGISTRY: crpa63e0skdhtni87735
+  CR_REPOSITORY: backend
+  IMAGE_TAG: ${{ github.sha }}
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -39,10 +44,6 @@ jobs:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
 
       - name: Build, tag, and push image to Yandex Cloud Container Registry
-        env:
-          CR_REGISTRY: crpa63e0skdhtni87735
-          CR_REPOSITORY: backend
-          IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
           docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
@@ -77,9 +78,5 @@ jobs:
 
 
       - name: Deploy to server
-        env:
-          CR_REGISTRY: crpa63e0skdhtni87735
-          CR_REPOSITORY: backend
-          IMAGE_TAG: ${{ github.sha }}
         run: |
           ssh -o "StrictHostKeyChecking=no" yc-sa-pgstart@${{ secrets.VM_IP }} "echo 'Hello' && sudo    docker rmi $(sudo docker images -q) -f && sudo docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG"
