@@ -165,6 +165,7 @@ func TestGetInsertCommand(t *testing.T) {
 	rr.Body.Bytes()
 	var res *models.Command
 	err = json.Unmarshal(rr.Body.Bytes(), &res)
+
 	if err != nil {
 		t.Error("Error with response reading")
 	}
