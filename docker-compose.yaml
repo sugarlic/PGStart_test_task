@@ -2,16 +2,17 @@ version: '3.8'
 
 services:
   db:
-    build:
-      context: ./
-    environment:
-      POSTGRES_PASSWORD: 1
-      POSTGRES_USER: postgres
-      POSTGRES_DB: postgres
+    image: postgres
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: 1
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    command: >
+      /bin/bash -c "echo 'host all all all md5' >> /var/lib/postgresql/data/pg_hba.conf && docker-entrypoint.sh postgres"
 
   app:
     image: cr.yandex/crpa63e0skdhtni87735/backend:${IMAGE_TAG}
