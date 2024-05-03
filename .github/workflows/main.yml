@@ -61,9 +61,14 @@ jobs:
         run: |
           ssh -o "StrictHostKeyChecking=no" yc-sa-pgstart@${{ secrets.VM_IP }} "\
           sudo docker login --username oauth --password-stdin cr.yandex <<< ${{ secrets.OAUTH_TOKEN }}; \
+          IMAGES=\$(sudo docker images -q); \
+          if [ ! -z \"\$IMAGES\" ]; then \
+            sudo docker rmi -f \$IMAGES; \
+          fi; \
           echo "Pulling image"; \
           sudo docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG"; \
           echo "docker-compose up"; \
-          # sudo docker-compose down; \
-          LATEST_TAG=$(sudo docker images cr.yandex/crpa63e0skdhtni87735/backend --format "{{.Tag}} {{.CreatedAt}}" | sort -r | head -n 1 | awk '{print $1}'); \
-          sudo TAG=$LATEST_TAG docker-compose up -d
+          sudo docker-compose down; \
+          bash /home/yc-sa-pgstart/deploy.sh
+          # LATEST_TAG=$(sudo docker images cr.yandex/crpa63e0skdhtni87735/backend --format "{{.Tag}} {{.CreatedAt}}" | sort -r | head -n 1 | awk '{print $1}'); \
+          # sudo TAG=$LATEST_TAG docker-compose up -d
