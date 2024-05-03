@@ -1,6 +1,10 @@
 package mocks
 
-import "github.com/test/pkg/models"
+import (
+	"context"
+
+	"github.com/test/pkg/models"
+)
 
 type MockCommands struct {
 	Commands   []*models.Command
@@ -8,7 +12,7 @@ type MockCommands struct {
 	Err        error // Общая ошибка для всех методов, если нужно
 }
 
-func (m *MockCommands) Latest() ([]*models.Command, error) {
+func (m *MockCommands) Latest(ctx context.Context) ([]*models.Command, error) {
 	m.ExpectCall["Latest"]++
 	if m.Err != nil {
 		return nil, m.Err
@@ -16,7 +20,7 @@ func (m *MockCommands) Latest() ([]*models.Command, error) {
 	return m.Commands, nil
 }
 
-func (m *MockCommands) Get(id int) (*models.Command, error) {
+func (m *MockCommands) Get(ctx context.Context, id int) (*models.Command, error) {
 	m.ExpectCall["Get"]++
 	if m.Err != nil {
 		return nil, m.Err
@@ -29,7 +33,7 @@ func (m *MockCommands) Get(id int) (*models.Command, error) {
 	return nil, models.ErrNoRecord
 }
 
-func (m *MockCommands) Insert(title, content string) error {
+func (m *MockCommands) Insert(ctx context.Context, title, content string) error {
 	m.ExpectCall["Insert"]++
 	if m.Err != nil {
 		return m.Err
@@ -40,7 +44,7 @@ func (m *MockCommands) Insert(title, content string) error {
 	return nil
 }
 
-func (m *MockCommands) Update(id int, exec_res string) error {
+func (m *MockCommands) Update(ctx context.Context, id int, exec_res string) error {
 	m.ExpectCall["Update"]++
 	if m.Err != nil {
 		return m.Err
@@ -54,7 +58,7 @@ func (m *MockCommands) Update(id int, exec_res string) error {
 	return models.ErrNoRecord
 }
 
-func (m *MockCommands) Delete(id int) error {
+func (m *MockCommands) Delete(ctx context.Context, id int) error {
 	m.ExpectCall["Delete"]++
 	if m.Err != nil {
 		return m.Err

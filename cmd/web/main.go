@@ -1,13 +1,14 @@
 package main
 
 import (
-	"database/sql"
+	"context"
 	"flag"
 	"log"
 	"net/http"
 	"os"
 
-	_ "github.com/lib/pq"
+	"github.com/jackc/pgx/v5/pgxpool"
+	_ "github.com/jackc/pgx/v5/pgxpool"
 	"github.com/test/pkg/models/postgre"
 )
 
@@ -19,7 +20,7 @@ type application struct {
 
 func main() {
 	addr := flag.String("addr", ":8080", "Сетевой адрес веб-сервера")
-	dsn := flag.String("dsn", "host=db port=5432 user=postgres password=1 dbname=postgres sslmode=disable", "Название PostgreSQL источника данных")
+	dsn := flag.String("dsn", "host=localhost port=5432 user=postgres password=1 dbname=postgres sslmode=disable", "Название PostgreSQL источника данных")
 	flag.Parse()
 
 	// infoLogFile, err := os.OpenFile("./log/info.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
@@ -37,17 +38,17 @@ func main() {
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 
-	db, err := openDB(*dsn)
+	dbpool, err := openDBpool(*dsn)
 	if err != nil {
 		errorLog.Fatal(err)
 	}
 
-	defer db.Close()
+	defer dbpool.Close()
 
 	app := &application{
 		errorLog: errorLog,
 		infoLog:  infoLog,
-		commands: &postgre.CommandModel{DB: db},
+		commands: &postgre.CommandModel{DB: dbpool},
 	}
 
 	srv := &http.Server{
@@ -61,15 +62,15 @@ func main() {
 	errorLog.Fatal(err)
 }
 
-func openDB(dsn string) (*sql.DB, error) {
-	db, err := sql.Open("postgres", dsn)
+func openDBpool(dsn string) (*pgxpool.Pool, error) {
+	dbpool, err := pgxpool.New(context.Background(), dsn)
 	if err != nil {
 		return nil, err
 	}
-	if err = db.Ping(); err != nil {
+	if err = dbpool.Ping(context.Background()); err != nil {
 		return nil, err
 	}
-	return db, nil
+	return dbpool, nil
 }
 
 func getEnv(key, fallback string) string {
