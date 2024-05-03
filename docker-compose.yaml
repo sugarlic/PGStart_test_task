@@ -2,7 +2,8 @@ version: '3.8'
 
 services:
   db:
-    image: postgres
+    build:
+      context: ./directory_with_Dockerfile
     environment:
       POSTGRES_PASSWORD: 1
       POSTGRES_USER: postgres
