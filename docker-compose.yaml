@@ -11,6 +11,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./my_custom_pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf
 
   app:
     image: cr.yandex/crpa63e0skdhtni87735/backend:${IMAGE_TAG}
