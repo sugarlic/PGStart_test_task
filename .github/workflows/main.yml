@@ -31,7 +31,7 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
-    # needs: test
+    needs: test
 
     steps:
       - name: Checkout main
