@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"os"
 
-	_ "github.com/lib/pq"
+	_ "github.com/jackc/pgx/v5"
 	"github.com/test/pkg/models/postgre"
 )
 

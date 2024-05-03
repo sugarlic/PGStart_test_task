@@ -5,5 +5,10 @@ go 1.21.1
 require github.com/lib/pq v1.10.9
 
 require (
-	golang.org/x/tools v0.0.0-20190425150028-36563e24a262 // indirect
+	github.com/jackc/pgpassfile v1.0.0 // indirect
+	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
+	github.com/jackc/pgx/v5 v5.5.5 // indirect
+	golang.org/x/crypto v0.17.0 // indirect
+	golang.org/x/text v0.14.0 // indirect
+	golang.org/x/tools v0.6.0 // indirect
 )
