@@ -17,7 +17,7 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s, err := app.commands.Latest()
+	s, err := app.commands.Latest(r.Context())
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -34,7 +34,7 @@ func (app *application) getCommand(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s, err := app.commands.Get(id)
+	s, err := app.commands.Get(r.Context(), id)
 	if err != nil {
 		if errors.Is(err, models.ErrNoRecord) {
 			app.notFound(w)
@@ -54,7 +54,7 @@ func (app *application) execCommand(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s, err := app.commands.Get(id)
+	s, err := app.commands.Get(r.Context(), id)
 	if err != nil {
 		if errors.Is(err, models.ErrNoRecord) {
 			app.notFound(w)
@@ -73,7 +73,7 @@ func (app *application) execCommand(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = app.commands.Update(id, s.Exec_res)
+		err = app.commands.Update(r.Context(), id, s.Exec_res)
 		if err != nil {
 			app.serverError(w, err)
 			return
@@ -101,7 +101,7 @@ func (app *application) createCommand(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = app.commands.Insert(data.Title, data.Content)
+	err = app.commands.Insert(r.Context(), data.Title, data.Content)
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -124,7 +124,7 @@ func (app *application) deleteCommand(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = app.commands.Delete(id)
+	err = app.commands.Delete(r.Context(), id)
 	if err != nil {
 		app.serverError(w, err)
 		return
