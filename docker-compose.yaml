@@ -3,7 +3,7 @@ version: '3.8'
 services:
   db:
     build:
-      context: ./psqlDockerfile
+      context: ./
     environment:
       POSTGRES_PASSWORD: 1
       POSTGRES_USER: postgres
