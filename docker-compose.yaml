@@ -22,13 +22,7 @@ services:
     depends_on:
       - db
     command: >
-      sh -c "sleep 10 && psql -h db -U postgres -d postgres -c \"
-            CREATE TABLE IF NOT EXISTS commands (
-              id SERIAL PRIMARY KEY,
-              title TEXT,
-              content TEXT,
-              exec_res TEXT
-            );\" && ./myapp"
+      sh -c "sleep 10 && ./myapp"
 
 volumes:
   postgres_data:
