@@ -6,7 +6,6 @@ import (
 	"errors"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	_ "github.com/jackc/pgx/v5/pgxpool"
 	"github.com/test/pkg/models"
 )
 

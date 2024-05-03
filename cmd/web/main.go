@@ -8,7 +8,6 @@ import (
 	"os"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	_ "github.com/jackc/pgx/v5/pgxpool"
 	"github.com/test/pkg/models/postgre"
 )
 
@@ -71,11 +70,4 @@ func openDBpool(dsn string) (*pgxpool.Pool, error) {
 		return nil, err
 	}
 	return dbpool, nil
-}
-
-func getEnv(key, fallback string) string {
-	if value, exists := os.LookupEnv(key); exists {
-		return value
-	}
-	return fallback
 }
