@@ -57,6 +57,22 @@ jobs:
         run: |
           scp -o "StrictHostKeyChecking=no" ./docker-compose.yaml yc-sa-pgstart@${{ secrets.VM_IP }}:/home/yc-sa-pgstart
 
+      # - name: Deploy to server
+      #   run: |
+      #     ssh -o "StrictHostKeyChecking=no" yc-sa-pgstart@${{ secrets.VM_IP }} "\
+      #     sudo docker login --username oauth --password-stdin cr.yandex <<< ${{ secrets.OAUTH_TOKEN }}; \
+      #     sudo docker-compose down; \
+      #     IMAGES=\$(sudo docker images -q); \
+      #     if [ ! -z \"\$IMAGES\" ]; then \
+      #       sudo docker rmi -f \$IMAGES; \
+      #     fi; \
+      #     echo "Pulling image"; \
+      #     sudo docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG; \
+      #     echo "docker-compose up"; \
+      #     LATEST_TAG=$(sudo docker images cr.yandex/crpa63e0skdhtni87735/backend --format "{{.Tag}} {{.CreatedAt}}" | sort -r | head -n 1 | awk '{print $1}'); \
+      #     echo "docker-compose up $LATEST_TAG"; \
+      #     sudo TAG=$LATEST_TAG docker-compose up -d"
+
       - name: Deploy to server
         run: |
           ssh -o "StrictHostKeyChecking=no" yc-sa-pgstart@${{ secrets.VM_IP }} "\
@@ -66,9 +82,9 @@ jobs:
           if [ ! -z \"\$IMAGES\" ]; then \
             sudo docker rmi -f \$IMAGES; \
           fi; \
-          echo "Pulling image"; \
+          echo 'Pulling image'; \
           sudo docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG; \
-          echo "docker-compose up"; \
-          LATEST_TAG=$(sudo docker images cr.yandex/crpa63e0skdhtni87735/backend --format "{{.Tag}} {{.CreatedAt}}" | sort -r | head -n 1 | awk '{print $1}'); \
-          echo "docker-compose up $LATEST_TAG"; \
-          sudo TAG=$LATEST_TAG docker-compose up -d"
+          echo 'Finding latest tag'; \
+          LATEST_TAG=\$(sudo docker images cr.yandex/crpa63e0skdhtni87735/backend --format '{{.Tag}} {{.CreatedAt}}' | sort -r | head -n 1 | awk '{print \$1}'); \
+          echo 'Running docker-compose up with tag: $LATEST_TAG'; \
+          sudo -E TAG=\$LATEST_TAG docker-compose up -d"
