@@ -37,16 +37,16 @@ jobs:
       - name: Checkout main
         uses: actions/checkout@v2
 
-      - name: Login to Yandex Cloud Container Registry
-        id: login-cr
-        uses: yc-actions/yc-cr-login@v1
-        with:
-          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+      # - name: Login to Yandex Cloud Container Registry
+      #   id: login-cr
+      #   uses: yc-actions/yc-cr-login@v1
+      #   with:
+      #     yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
 
-      - name: Build, tag, and push image to Yandex Cloud Container Registry
-        run: |
-          docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
-          docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
+      # - name: Build, tag, and push image to Yandex Cloud Container Registry
+      #   run: |
+      #     docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
+      #     docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
 
       # - name: Deploy COI VM
       #   id: deploy-coi
@@ -79,7 +79,6 @@ jobs:
       - name: Deploy to server
         run: |
           ssh -o "StrictHostKeyChecking=no" yc-sa-pgstart@${{ secrets.VM_IP }} "\
-          echo 'cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG'; \
           sudo docker login --username oauth --password-stdin cr.yandex <<< ${{ secrets.OAUTH_TOKEN }}; \
           IMAGES=\$(sudo docker images -q); \
           if [ ! -z \"\$IMAGES\" ]; then \
