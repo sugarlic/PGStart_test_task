@@ -37,35 +37,16 @@ jobs:
       - name: Checkout main
         uses: actions/checkout@v2
 
-      # - name: Login to Yandex Cloud Container Registry
-      #   id: login-cr
-      #   uses: yc-actions/yc-cr-login@v1
-      #   with:
-      #     yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+      - name: Login to Yandex Cloud Container Registry
+        id: login-cr
+        uses: yc-actions/yc-cr-login@v1
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
 
-      # - name: Build, tag, and push image to Yandex Cloud Container Registry
-      #   run: |
-      #     docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
-      #     docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
-
-      # - name: Deploy COI VM
-      #   id: deploy-coi
-      #   uses: yc-actions/yc-coi-deploy@v2
-      #   env:
-      #     CR_REGISTRY: crpa63e0skdhtni87735
-      #     CR_REPOSITORY: backend
-      #     IMAGE_TAG: ${{ github.sha }}
-      #   with:
-      #     yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
-      #     folder-id: ${{ secrets.YC_FOLDER_ID }}
-      #     vm-name: testvm
-      #     vm-service-account-id: epdtc6j2rh93lrt4vqom
-      #     vm-cores: 2
-      #     vm-memory: 2Gb
-      #     vm-core-fraction: 100
-      #     vm-subnet-id: e2lmf84lhk5tekk3cqq1
-      #     user-data-path: './user-data.yaml'
-      #     docker-compose-path: './docker-compose.yaml'
+      - name: Build, tag, and push image to Yandex Cloud Container Registry
+        run: |
+          docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
+          docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
 
       - name: Setup SSH key
         uses: webfactory/ssh-agent@v0.5.3
