@@ -21,5 +21,8 @@ stop:
 tests:
 	go test -v ./...
 
+cl_build:
+	go build -o cl ./client/client.go
+
 clean:
 	rm app

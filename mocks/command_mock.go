@@ -9,7 +9,7 @@ import (
 type MockCommands struct {
 	Commands   []*models.Command
 	ExpectCall map[string]int
-	Err        error // Общая ошибка для всех методов, если нужно
+	Err        error
 }
 
 func (m *MockCommands) Latest(ctx context.Context) ([]*models.Command, error) {

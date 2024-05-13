@@ -16,7 +16,7 @@ import (
 )
 
 func getCommandList(client *http.Client) ([]*models.Command, error) {
-	url := "http://84.252.140.153:8080"
+	url := "http://158.160.85.99:8080"
 
 	// запрос
 	body, err := utils.SendRequest(client, url)
@@ -44,7 +44,7 @@ func getCommandList(client *http.Client) ([]*models.Command, error) {
 }
 
 func getCommandById(client *http.Client, id int) (*models.Command, error) {
-	url := fmt.Sprintf("http://84.252.140.153:8080/command?id=%d", id)
+	url := fmt.Sprintf("http://158.160.85.99:8080/command?id=%d", id)
 
 	// запрос
 	body, err := utils.SendRequest(client, url)
@@ -64,7 +64,7 @@ func getCommandById(client *http.Client, id int) (*models.Command, error) {
 }
 
 func execCommandById(client *http.Client, id int) error {
-	url := fmt.Sprintf("http://84.252.140.153:8080/command/exec?id=%d", id)
+	url := fmt.Sprintf("http://158.160.85.99:8080/command/exec?id=%d", id)
 
 	// запрос
 	respBody, err := utils.SendRequest(client, url)
@@ -93,7 +93,7 @@ func sendCommand(client *http.Client, filePath string) error {
 		return err
 	}
 	// запрос
-	url := "http://84.252.140.153:8080/command/create"
+	url := "http://158.160.85.99:8080/command/create"
 
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(json_data))
 	if err != nil {
@@ -119,7 +119,7 @@ func sendCommand(client *http.Client, filePath string) error {
 
 func deleteCommand(client *http.Client, id int) error {
 	// запрос
-	url := fmt.Sprintf("http://84.252.140.153:8080/command/delete?id=%d", id)
+	url := fmt.Sprintf("http://158.160.85.99:8080/command/delete?id=%d", id)
 
 	req, err := http.NewRequest("DELETE", url, nil)
 	if err != nil {
@@ -146,9 +146,9 @@ func deleteCommand(client *http.Client, id int) error {
 func main() {
 	get_commands := flag.Bool("c", false, "Get list of commands")
 	command_id := flag.Int("g", -1, "Get command by it's id")
-	send_command := flag.String("f", "", "Send command to the server")
-	exec_command := flag.Int("e", -1, "Exec command on the server")
-	del_command := flag.Int("d", -1, "Delete command on the server")
+	send_command := flag.String("f", "", "Send command to the server (filename)")
+	exec_command := flag.Int("e", -1, "Exec command on the server by it's id")
+	del_command := flag.Int("d", -1, "Delete command on the server by it's id")
 
 	flag.Parse()
 
